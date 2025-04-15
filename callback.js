@@ -2,21 +2,21 @@
 // Crie mais 2 funcoes que vao ser as funcoes de callback que serao chamadas dentro da funcao compra, uma se chama pagamentoPix e outra se chama pagamentoCartao, a pagamento pix devera ter uma funcao dentro dela onde aparece um console.log("QRcode disponivel"), alem de um outro console log ("Pagamento efetuado") na ultima etapa da funcao. Ja a funcao pagamento devera ter um console de ("Inserindo dados do cartao") alem de ter um console no final da funcao de "Pagamento aprovado".
 
 const compra = (callback) => {
-    console.log("Processamento do produto")
-    console.log("Realizando pagamento")
-    callback();
+    console.log("processamento dos produtos");
+    const mensagemSucesso = () => {
+        console.log("pagamento efetuado com sucesso!")
+    }
+    callback(mensagemSucesso);
 }
-
-
 const pagamentoPix = (callback) => {
-    console.log("Qrcode disponível")
+    console.log("QRcode disponivel")
+    callback();
+}
+const pagamentoCartao = (callback) => {
+    console.log("Inserindo dados do cartao");
     callback();
 }
 
-const pagamentoCartao = (callback) => {
-    console.log("Inserindo dados do cartão");
+compra(pagamentoPix);
 
-}
-
-compra(pagamentoCartao)
-compra(pagamentoPix)
+// compra(pagamentoCartao);
