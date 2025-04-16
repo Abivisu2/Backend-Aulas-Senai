@@ -39,6 +39,8 @@ const aluno = {
 }
 
 const Objeto = (callback) => {
+
+    
     callback(aluno)
 }
 

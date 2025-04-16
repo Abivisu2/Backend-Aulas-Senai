@@ -26,9 +26,9 @@ const estoque = { A: 2, B: 1, AB: 0, O: 6 };
         switch (tipo) {
             case 'A':
                 if (estoque.A > 0) {
-                    console.log(`✅ ${paciente.nome} pode receber transfusão de sangue tipo A.`);
+                    console.log(`${paciente.nome} pode receber transfusão de sangue tipo A.`);
                 } else {
-                    console.log(`❌ ${paciente.nome} NÃO pode receber transfusão de sangue tipo A - fora de estoque.`);
+                    console.log(`${paciente.nome} NÃO pode receber transfusão de sangue tipo A - fora de estoque.`);
                 }
                 break;
     
