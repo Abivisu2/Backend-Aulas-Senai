@@ -3,20 +3,24 @@
 
 const compra = (callback) => {
     console.log("Processamento do produto")
-    console.log("Realizando pagamento")
-    callback();
+    const mensagemPagamento  = () =>  {
+        console.log("Realizando pagamento")
+    }
+    callback(mensagemPagamento);
 }
 
 
 const pagamentoPix = (callback) => {
-    console.log("Qrcode disponível")
+    console.log("Qrcode disponível");
     callback();
+    console.log ("Pagamento efetuado");
 }
 
 const pagamentoCartao = (callback) => {
     console.log("Inserindo dados do cartão");
-
+    callback();
+    console.log("Pagamento aprovado");
 }
 
 compra(pagamentoCartao)
-compra(pagamentoPix)
+// compra(pagamentoPix)
