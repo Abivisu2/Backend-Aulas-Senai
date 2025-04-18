@@ -8,8 +8,6 @@ const compra = (callback) => {
     }
     callback(mensagemPagamento);
 }
-
-
 const pagamentoPix = (callback) => {
     console.log("Qrcode disponível");
     callback();
