@@ -1,1 +1,1 @@
-  // if()
+aplicarDesconto.forEach()

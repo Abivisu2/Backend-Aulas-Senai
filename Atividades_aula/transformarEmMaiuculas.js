@@ -5,8 +5,6 @@ const nomes = ['ana', 'bruno', 'carla'];
 const arrayTransformado = nomes.map((nome) => {
     return nome.toUpperCase()
 })
-
 console.log("O array transformado com todas letras maiúscula: ", arrayTransformado)
-
 
 // Resultado esperado: ['ANA', 'BRUNO', 'CARLA']

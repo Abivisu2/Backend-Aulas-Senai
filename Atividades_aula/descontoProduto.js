@@ -6,11 +6,10 @@ const produtos = [
     { nome: 'Tênis', preco: 120 }
   ];
 
-
 const transformarArray = produtos.map((produto) => {
     percentualDesconto = produto.preco * 0.1;
     novoPreco = produto.preco - percentualDesconto;
-
+    
     return {
         nome: produto.nome,
         precoComDesconto: novoPreco

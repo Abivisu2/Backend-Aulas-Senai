@@ -6,7 +6,6 @@ let total
 const somarNumeros = numeros.forEach((numero) => { 
     total = numero + numero
 })
-
 console.log("Total: ", total)  
 
 // Resultado esperado no console:
