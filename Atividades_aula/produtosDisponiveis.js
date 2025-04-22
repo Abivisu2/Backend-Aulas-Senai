@@ -10,6 +10,19 @@ const produtos = [
 const filtraProdutos = produtos.filter(produto => produto.preco > 100 & produto.disponivel === true);
 console.log(filtraProdutos)
 
+// Também pode ser ser feito da seguinte forma
+// const filtraProdutos = produtos.filter(produto => produto.preco > 100 & !produto.disponivel);
+// console.log("produtos indiponíveis",filtraProdutos)
+
+// const filtraProdutos = produtos.filter(produto => produto.preco > 100 & produto.disponivel);
+// console.log("produtos diponíveis",filtraProdutos)
+
+// Para os indisponíveis
+// const filtraProdutos = produtos.filter((produto) => {
+//   return !produto.disponivel
+// });
+// console.log("produtos insisponíveis", filtraProdutos)
+
 // Resultado esperado:
 // [
 //   { nome: 'Notebook', preco: 3000, disponivel: true },

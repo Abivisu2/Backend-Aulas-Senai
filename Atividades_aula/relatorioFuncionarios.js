@@ -18,7 +18,7 @@ const funcionarios = [
   { nome: 'Fernanda', idade: 25, salario: 3800, ativo: true }
 ];
 
-const filtrarFuncionarios = funcionarios.filter(funcionario => funcionario.ativo === true)
+const filtrarFuncionarios = funcionarios.filter(funcionario => funcionario.ativo)
 // console.log("funcionarios filtrados", filtrarFuncionarios)
 
 const aplicarDesconto = filtrarFuncionarios.map((funcionario) => {
