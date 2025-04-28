@@ -13,10 +13,20 @@ app.get('/alunos', (req, res) => {
 app.post('/alunos', (req, res) => {
   const { nome, matricula, status } = req.body;
 
-  if(nome === "" && status != "ativo" || status != "inativo" & matricula === matricula){
-    return console.Console("Todos dados são obrigatóriso!")
-  }else{
-    
+  if(!nome || !matricula || (status !== "ativo" && status !== "inativo")){
+    return res.status(400).json({
+      mensagem: 'Preencha todos os campos'
+    })
+  }
+
+  const verificarMatricula = alunos.filter(aluno => aluno.matricula === matricula);
+    if(alunos.length > 0){
+      if (verificarMatricula) {
+        return res.status(200).json({
+        mensagem: 'Aluno com matrícula já cadastrada!'
+      })}
+    } 
+
     alunos.push(
       {
         nome,
@@ -24,8 +34,6 @@ app.post('/alunos', (req, res) => {
         status, 
       }
     )
-  }
-
 
   res.json({
     mensagem: "Dados recebidos com sucesso!",
@@ -34,31 +42,21 @@ app.post('/alunos', (req, res) => {
 });
 
 app.post('/alunos/:matricula/notas', (req, res) => {
-  const {notas} = req.body;
+  const {nome, matricula, status, notas} = req.body;
 
-  alunos.put({
+  alunos.push({
     nome,
     matricula,
     status, 
-    notas: [7.5, 8.0, 6.5, 9.0]
+    notas
     
   })
 
-})
-
-app.delete('/items/:idItem',(req, res) => {
-
-  const {idItem} = req.params;
-
-  console.log("idItem", idItem)
-
-  items = items.filter(item => {
-    return item.id != idItem;
-  });
-
   res.json({
-    mensagem: "Dado deletado com sucesso!",
+    mensagem: "Notas autualizados com sucesso!",
+    body: {nome, matricula, status, notas}
   })
+
 })
 
 app.listen(3000, () => {
