@@ -22,7 +22,7 @@ app.post('/alunos', (req, res) => {
   const verificarMatricula = alunos.filter(aluno => aluno.matricula === matricula);
     if(alunos.length > 0){
       if (verificarMatricula) {
-        return res.status(200).json({
+        return res.status(400).json({
         mensagem: 'Aluno com matrícula já cadastrada!'
       })}
     } 
@@ -42,19 +42,33 @@ app.post('/alunos', (req, res) => {
 });
 
 app.post('/alunos/:matricula/notas', (req, res) => {
-  const {nome, matricula, status, notas} = req.body;
+  const {notas} = req.body;
+  const {matricula} = req.params;
 
-  alunos.push({
-    nome,
-    matricula,
-    status, 
-    notas
-    
-  })
+  if(notas.length !== 4){
+    return res.status(400).json({
+     mensagem: "Tem que cadastrar exatamente 4 notas!" 
+    })
+  }
+
+  const aluno = alunos.find(aluno => aluno.matricula === matricula)
+
+  if(!aluno){
+    return res.status(400).json({
+      mensagem: "Este aluno não está cadastrado!"
+    })
+  }
+
+  aluno.nota = [...notas];
 
   res.json({
     mensagem: "Notas autualizados com sucesso!",
-    body: {nome, matricula, status, notas}
+    body: {
+      nome: aluno.nome,
+      matricula: aluno.matricula, 
+      status: aluno.status,
+      notas: aluno.notas
+    }
   })
 
 })
@@ -62,6 +76,18 @@ app.post('/alunos/:matricula/notas', (req, res) => {
 app.listen(3000, () => {
   console.log('Servidor rodando na porta 3000');
 });
+
+app.delete("/alunos/:matricula", (req, res) => {
+  const {matricula} = req.params;
+
+  const removerAluno = alunos.filter(aluno => aluno.matricula === matricula)
+  alunos.splice(removerAluno)
+
+  res.json({
+    mensagem: "Aluno removido!",
+  })
+
+})
 
 
 //Instalar o thunder client para rodar
