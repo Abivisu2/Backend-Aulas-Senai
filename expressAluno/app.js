@@ -10,21 +10,42 @@ app.get('/alunos', (req, res) => {
   res.json(alunos);
 });
 
+// 📍 Cadastro de aluno
 app.post('/alunos', (req, res) => {
   const { nome, matricula, status } = req.body;
 
-  if(!nome || !matricula || (status !== "ativo" && status !== "inativo")){
+  if(!nome){
     return res.status(400).json({
-      mensagem: 'Preencha todos os campos'
+      mensagem: "O campo 'nome' é obrigatório."})
+  }
+
+  if(nome.length >= 3){
+    return res.status(400).json({
+      mensagem:  "O nome deve conter pelo menos 3 caracteres."})
+  }
+
+  if(!matricula){
+    return res.status(400).json({
+      mensagem: "O campo 'matricula' é obrigatório."})
+  }
+
+  if(!status){
+    return res.status(400).json({
+      mensagem: "O campo 'status' é obrigatório."})
+  }
+
+  if(status !== "ativo" && status !== "inativo"){
+    return res.status(400).json({
+      mensagem: "O campo 'status' deve ser 'ativo' ou 'inativo'."
     })
   }
 
-  const verificarMatricula = alunos.filter(aluno => aluno.matricula === matricula);
-    if(alunos.length > 0){
-      if (verificarMatricula) {
+  const verificarMatricula = alunos.filter(aluno => aluno.matricula.toLowerCase() === matricula.toLowerCase())
+  
+    if(verificarMatricula.length > 0){
         return res.status(400).json({
-        mensagem: 'Aluno com matrícula já cadastrada!'
-      })}
+        mensagem: "Já existe um aluno com essa matrícula."
+      })
     } 
 
     alunos.push(
@@ -32,27 +53,28 @@ app.post('/alunos', (req, res) => {
         nome,
         matricula,
         status, 
+        dataCriada: new Date().toISOString()  
       }
     )
 
-  res.json({
-    mensagem: "Dados recebidos com sucesso!",
-    body: { nome, matricula, status }
-  });
+  res.status(201).json({ mensagem: "Aluno cadastrado com sucesso." });
+
 });
 
+// 📍 Cadastro de notas
 app.post('/alunos/:matricula/notas', (req, res) => {
   const {notas} = req.body;
   const {matricula} = req.params;
 
-  if(notas.length !== 4){
-    return res.status(400).json({
-     mensagem: "Tem que cadastrar exatamente 4 notas!" 
-    })
+  if(alunos.length > 0){
+    if(notas.length !== 4){
+      return res.status(400).json({
+       mensagem: "Tem que cadastrar exatamente 4 notas!" 
+      })
+    }
   }
 
-  const aluno = alunos.find(aluno => aluno.matricula === matricula)
-
+  const aluno = alunos.filter(aluno => aluno.matricula === matricula)
   if(!aluno){
     return res.status(400).json({
       mensagem: "Este aluno não está cadastrado!"
@@ -67,12 +89,13 @@ app.post('/alunos/:matricula/notas', (req, res) => {
       nome: aluno.nome,
       matricula: aluno.matricula, 
       status: aluno.status,
-      notas: aluno.notas
+      notas: aluno.nota
     }
   })
 
 })
 
+// 📍 Excluir aluno
 app.listen(3000, () => {
   console.log('Servidor rodando na porta 3000');
 });
