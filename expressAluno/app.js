@@ -19,7 +19,7 @@ app.post('/alunos', (req, res) => {
       mensagem: "O campo 'nome' é obrigatório."})
   }
 
-  if(nome.length >= 3){
+  if(nome.length < 3){
     return res.status(400).json({
       mensagem:  "O nome deve conter pelo menos 3 caracteres."})
   }
@@ -66,32 +66,42 @@ app.post('/alunos/:matricula/notas', (req, res) => {
   const {notas} = req.body;
   const {matricula} = req.params;
 
-  if(alunos.length > 0){
-    if(notas.length !== 4){
-      return res.status(400).json({
-       mensagem: "Tem que cadastrar exatamente 4 notas!" 
-      })
-    }
-  }
-
-  const aluno = alunos.filter(aluno => aluno.matricula === matricula)
-  if(!aluno){
+  if(!notas || !Array.isArray(notas) || notas.length !== 4){
     return res.status(400).json({
-      mensagem: "Este aluno não está cadastrado!"
+     mensagem: "Devem ser fornecidas exatamente 4 notas." 
     })
   }
 
-  aluno.nota = [...notas];
+  const alunoIndex = alunos.findIndex(aluno => aluno.matricula === matricula)
+  if(alunoIndex === -1){
+    return res.status(400).json({
+      mensagem: "Aluno não encontrado."
+    })
+  }
+
+  if(alunos[alunoIndex].status === "inativo"){
+    return res.status(400).json({
+      mensagem: "Não é possível cadastrar notas para alunos inativos."
+    })
+  }
+
+  alunos[alunoIndex].notas = [...notas];
 
   res.json({
-    mensagem: "Notas autualizados com sucesso!",
-    body: {
-      nome: aluno.nome,
-      matricula: aluno.matricula, 
-      status: aluno.status,
-      notas: aluno.nota
-    }
+    mensagem: "Notas cadastradas com sucesso.",
   })
+
+  // aluno.nota = [...notas];
+
+  // res.json({
+  //   mensagem: "Notas autualizados com sucesso!",
+  //   body: {
+  //     nome: aluno.nome,
+  //     matricula: aluno.matricula, 
+  //     status: aluno.status,
+  //     notas: aluno.nota
+  //   }
+  // })
 
 })
 
