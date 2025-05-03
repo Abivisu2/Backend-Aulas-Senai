@@ -43,7 +43,7 @@ app.post('/alunos', (req, res) => {
   const verificarMatricula = alunos.filter(aluno => aluno.matricula.toLowerCase() === matricula.toLowerCase())
   
     if(verificarMatricula.length > 0){
-        return res.status(400).json({
+        return res.status(409).json({
         mensagem: "Já existe um aluno com essa matrícula."
       })
     } 
@@ -66,66 +66,170 @@ app.post('/alunos/:matricula/notas', (req, res) => {
   const {notas} = req.body;
   const {matricula} = req.params;
 
-  if(!notas || !Array.isArray(notas) || notas.length !== 4){
+  if(!notas || !Array.isArray(notas)){
     return res.status(400).json({
-     mensagem: "Devem ser fornecidas exatamente 4 notas." 
+     mensagem: "O campo 'notas' é obrigatório e deve ser um array de 4 números." 
+    })
+  }
+
+  if(notas.length !== 4){
+    return res.status(400).json({
+      mensagem:"Devem ser fornecidas exatamente 4 notas."
     })
   }
 
   const alunoIndex = alunos.findIndex(aluno => aluno.matricula === matricula)
   if(alunoIndex === -1){
-    return res.status(400).json({
+    return res.status(404).json({
       mensagem: "Aluno não encontrado."
     })
   }
 
   if(alunos[alunoIndex].status === "inativo"){
-    return res.status(400).json({
+    return res.status(403).json({
       mensagem: "Não é possível cadastrar notas para alunos inativos."
     })
   }
 
   alunos[alunoIndex].notas = [...notas];
 
-  res.json({
+  const verificarNotas = alunos[alunoIndex].notas.find(nota => nota < 0.0 || nota > 10.0)
+  if(verificarNotas){
+    return res.status(400).json({
+      mensagem: "As notas devem estar entre 0 e 10."
+    })
+  }
+
+  res.status(200).json({
     mensagem: "Notas cadastradas com sucesso.",
   })
 
-  // aluno.nota = [...notas];
+});
 
-  // res.json({
-  //   mensagem: "Notas autualizados com sucesso!",
-  //   body: {
-  //     nome: aluno.nome,
-  //     matricula: aluno.matricula, 
-  //     status: aluno.status,
-  //     notas: aluno.nota
-  //   }
-  // })
+// 📍 Excluir aluno
+app.delete("/alunos/:matricula", (req, res) => {
+  const {matricula} = req.params;
+
+  const alunoIndex = alunos.findIndex(aluno => aluno.matricula === matricula)
+  if(alunoIndex === -1){
+    return res.status(404).json({
+      mensagem: "Aluno não encontrado."
+    })
+  }
+
+  const alunoRemovido = alunos.splice(alunoIndex, 1)
+  res.status(200).json({
+    mensagem: "Aluno removido com sucesso.",
+  })
 
 })
 
-// 📍 Excluir aluno
+// 📍 Listar todos os alunos
+app.get("/alunos", (req, res) => {
+  const { matricula, status } = req.query;
+
+  let alunosFiltrados = [...alunos];
+
+  if (matricula) {
+    alunosFiltrados = alunosFiltrados.filter(aluno =>
+      aluno.matricula && aluno.matricula.toLowerCase() === matricula.toLowerCase()
+    );
+  }
+
+  if (status) {
+    alunosFiltrados = alunosFiltrados.filter(aluno =>
+      aluno.status && aluno.status.toLowerCase() === status.toLowerCase()
+    );
+  }
+
+  return res.status(200).json({
+    body: alunosFiltrados
+  });
+});
+
+// 📍 Listar alunos com notas e médias
+app.get("/alunos/notas", (req, res) => {
+  const { status } = req.query;
+  const alunosComNotasEmedias = [];
+
+  alunos.forEach(aluno => {
+    // Valida status ativo + opcionalmente por filtro de status via query (?status=ativo)
+    const statusValido = aluno.status.toLowerCase() === "ativo" &&
+      (!status || aluno.status.toLowerCase() === status.toLowerCase());
+
+    const notasValidas = Array.isArray(aluno.notas) && aluno.notas.length === 4;
+
+    if (statusValido && notasValidas) {
+      const soma = aluno.notas.reduce((total, nota) => total + nota, 0);
+      const media = (soma / 4) 
+
+      let situacao = "";
+      if (media >= 7) {
+        situacao = "aprovado";
+      } else if (media >= 5) {
+        situacao = "recuperação";
+      } else {
+        situacao = "reprovado";
+      }
+
+      alunosComNotasEmedias.push({
+        nome: aluno.nome,
+        matricula: aluno.matricula,
+        notas: aluno.notas,
+        media,
+        situacao
+      });
+    }
+  });
+
+  return res.status(200).json(alunosComNotasEmedias);
+});
+
+// 📍 Buscar aluno por matrícula
+app.get("/alunos/:matricula", (req, res) => {
+  const { matricula } = req.params;
+
+  const aluno = alunos.find(aluno => aluno.matricula.toLowerCase() === matricula.toLowerCase());
+
+  if (!aluno) {
+    return res.status(404).json({ erro: "Aluno não encontrado." });
+  }
+
+  const notas = aluno.notas;
+  let media = null;
+  let situacao = null;
+  let dataAlteracao = new Date().toISOString()
+
+  if (Array.isArray(notas) && notas.length === 4) {
+    const soma = notas.reduce((total, nota) => total + nota, 0);
+    media = (soma / 4)
+
+    if (media >= 7) {
+      situacao = "aprovado";
+    } else if (media >= 5) {
+      situacao = "recuperação";
+    } else {
+      situacao = "reprovado";
+    }
+  }
+
+  return res.status(200).json({
+    nome: aluno.nome,
+    matricula: aluno.matricula,
+    status: aluno.status,
+    notas: aluno.notas,
+    media,
+    situacao,
+    dataCriada: aluno.dataCriada,
+    dataAlteracao: dataAlteracao
+  });
+});
+
+
 app.listen(3000, () => {
   console.log('Servidor rodando na porta 3000');
 });
 
-app.delete("/alunos/:matricula", (req, res) => {
-  const {matricula} = req.params;
-
-  const removerAluno = alunos.filter(aluno => aluno.matricula === matricula)
-  alunos.splice(removerAluno)
-
-  res.json({
-    mensagem: "Aluno removido!",
-  })
-
-})
-
-
 //Instalar o thunder client para rodar
-//dar um npm i, depois dar um npm i express, depois dar um npm start
-
-
-
+//dar um npm i, depois dar um npm start
 
