@@ -6,10 +6,6 @@ let alunos = [];
 
 app.use(express.json());
 
-app.get('/alunos', (req, res) => {
-  res.json(alunos);
-});
-
 // 📍 Cadastro de aluno
 app.post('/alunos', (req, res) => {
   const { nome, matricula, status } = req.body;
@@ -117,34 +113,27 @@ app.delete("/alunos/:matricula", (req, res) => {
     })
   }
 
-  const alunoRemovido = alunos.splice(alunoIndex, 1)
+  alunos[alunoIndex].status = "inativo"
+  // const alunoRemovido = alunos.splice(alunoIndex, 1)
   res.status(200).json({
     mensagem: "Aluno removido com sucesso.",
   })
 
 })
 
-// 📍 Listar todos os alunos
+// 📍 Listar todos os alunos e com status ativos
 app.get("/alunos", (req, res) => {
-  const { matricula, status } = req.query;
+  const {status} = req.query;
 
-  let alunosFiltrados = [...alunos];
-
-  if (matricula) {
-    alunosFiltrados = alunosFiltrados.filter(aluno =>
-      aluno.matricula && aluno.matricula.toLowerCase() === matricula.toLowerCase()
-    );
+  if (!status) {
+    return res.status(200).json({ body: alunos });
   }
 
-  if (status) {
-    alunosFiltrados = alunosFiltrados.filter(aluno =>
-      aluno.status && aluno.status.toLowerCase() === status.toLowerCase()
-    );
-  }
+  const alunosFiltrados = alunos.filter(aluno => 
+    aluno.status.toLowerCase() === status.toLowerCase()
+  );
+  return res.status(200).json({ body: alunosFiltrados });
 
-  return res.status(200).json({
-    body: alunosFiltrados
-  });
 });
 
 // 📍 Listar alunos com notas e médias
@@ -153,7 +142,7 @@ app.get("/alunos/notas", (req, res) => {
   const alunosComNotasEmedias = [];
 
   alunos.forEach(aluno => {
-    // Valida status ativo + opcionalmente por filtro de status via query (?status=ativo)
+    
     const statusValido = aluno.status.toLowerCase() === "ativo" &&
       (!status || aluno.status.toLowerCase() === status.toLowerCase());
 
@@ -230,6 +219,6 @@ app.listen(3000, () => {
   console.log('Servidor rodando na porta 3000');
 });
 
-//Instalar o thunder client para rodar
+//Instalar o thunder client
 //dar um npm i, depois dar um npm start
 
