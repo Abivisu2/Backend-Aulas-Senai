@@ -1,9 +1,24 @@
+
 import express from 'express';
+import {Client} from 'pg';
 
+// TODO: Conexao postgres
+const client = new Client({
+  user: 'abilio_user',
+  host: 'dpg-d0ekb195pdvs73aphghg-a.oregon-postgres.render.com',
+  database: 'abilio',
+  password: 'pMKRFlnZIV6eVWqOnGcNsbWSJPbuCoKZ',
+  port: 5432,
+  ssl: true
+});
+
+client.connect()
+  .then(() => console.log("Conectado com sucesso!"))
+  .catch(err => console.error("Erro ao conectar: ", err.stack));
+
+  // Início da aplicação de cadastro de alunos
 const app = express();
-
 let alunos = [];
-
 app.use(express.json());
 
 // 📍 Cadastro de aluno
