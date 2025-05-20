@@ -29,13 +29,13 @@ function App() {
         <Box sx={{ p: '0px', m:0, width: '80%', height: '60%', backgroundColor: 'cyan', display: 'flex', justifyContent: 'center', alignItems: 'center', boxSizing: 'border-box'}}>
           <Stack sx={{ p: '20px', m:0, width: '60%', height: '90%', backgroundColor: 'violet', display: 'flex', justifyContent: 'space-around', flexDirection: 'column', alignItems: 'center', gap: '5px', overflow: 'auto'}}>
 
-            <TextField id="nomeAluno" label="Nome Completo" variant="outlined" sx={{ width: '40%'}}/>
-            <TextField id="matriculaAluno" label="Número de Matrícula " variant="outlined" sx={{ width: '40%'}}/>
-            <TextField id="StatusAluno" label="Status do Aluno" variant="outlined" sx={{ width: '40%'}}/>
-            <TextField id="Nota1" label="Nota 1" variant="outlined" sx={{ width: '40%'}}/>
-            <TextField id="Nota2" label="Nota 2" variant="outlined" sx={{ width: '40%'}}/>
-            <TextField id="Nota3" label="Nota 3" variant="outlined" sx={{ width: '40%'}}/>
-            <TextField id="Nota4" label="Nota 4" variant="outlined" sx={{ width: '40%'}}/>
+            <TextField size='small' id="nomeAluno" label="Nome Completo" variant="outlined" sx={{ width: '40%'}}/>
+            <TextField size='small' id="matriculaAluno" label="Número de Matrícula " variant="outlined" sx={{ width: '40%'}}/>
+            <TextField size='small' id="StatusAluno" label="Status do Aluno" variant="outlined" sx={{ width: '40%'}}/>
+            <TextField size='small' id="Nota1" label="Nota 1" variant="outlined" sx={{ width: '40%'}}/>
+            <TextField size='small' id="Nota2" label="Nota 2" variant="outlined" sx={{ width: '40%'}}/>
+            <TextField size='small' id="Nota3" label="Nota 3" variant="outlined" sx={{ width: '40%'}}/>
+            <TextField size='small' id="Nota4" label="Nota 4" variant="outlined" sx={{ width: '40%'}}/>
 
           </Stack>
 
