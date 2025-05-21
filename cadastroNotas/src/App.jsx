@@ -14,39 +14,80 @@ function App() {
     nota4: ''
   })
 
+  // Melhorar a função que controla a mudança das entradas de dados e o handleChange
+  function handleChange(e) {
+    const { id, value } = e.target;
+    setAluno(prevState => ({
+      ...prevState,
+      [id]: value
+    }));
+  }
+
+  function salvarDados() {
+    if (aluno.nome == "" || aluno.matricula == '' || aluno.status == '' || aluno.nota1 == '' || aluno.nota2 == '' || aluno.nota3 == ''|| aluno.nota4 == '') {
+      alert('Por favor, preencha todos os campos!');
+      return;
+    }
+    
+    localStorage.setItem('alunoData', JSON.stringify(aluno));
+    alert('Dados salvos com sucesso!');
+    
+    setAluno({
+      nome: '',
+      matricula: '',
+      status: '',
+      nota1: '',
+      nota2: '',
+      nota3: '',
+      nota4: ''
+    });
+  }
+
+  function limparDados() {
+    setAluno({
+      nome: '',
+      matricula: '',
+      status: '',
+      nota1: '',
+      nota2: '',
+      nota3: '',
+      nota4: ''
+    });
+  }
+
   return (
     <div>
-      <Box sx={{ p: '0', m: '0', width: '100vw', height: '100vh', backgroundColor: 'blue', display: 'flex', justifyContent: 'start', alignItems: 'center', flexDirection: 'column' }}>
+      <Box sx={{ p: '0', m: '0', width: '100vw', height: '100vh', backgroundColor: 'whitesmoke', display: 'flex', justifyContent: 'start', alignItems: 'center', flexDirection: 'column' }}>
 
-        <Box sx={{ width: '80%', height: '20%', bgcolor: 'gray', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+        <Box sx={{ width: '80%', height: '20%', bgcolor: '#008DA9', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
 
-          <Stack sx={{ width: '60%', height: '60%', backgroundColor: 'white', display: 'flex', alignContent: 'center', justifyContent: 'center' }}>
-            <Typography variant="h3" component="h2" sx={{ color: 'black', display: 'flex', justifyContent: 'center' }}> Cadastro de notas </Typography>
+          <Stack sx={{ width: '60%', height: '60%', backgroundColor: '#008DA9', display: 'flex', alignItems: 'center', justifyContent: 'end' }}>
+            <Typography variant="h3" component="h2" sx={{ color: 'white', display: 'flex', justifyContent: 'center', fontFamily: 'fantasy'}}> Cadastro de notas </Typography>
           </Stack>
 
         </Box>
 
-        <Box sx={{ p: '0px', m:0, width: '80%', height: '60%', backgroundColor: 'cyan', display: 'flex', justifyContent: 'center', alignItems: 'center', boxSizing: 'border-box'}}>
-          <Stack sx={{ p: '20px', m:0, width: '60%', height: '90%', backgroundColor: 'violet', display: 'flex', justifyContent: 'space-around', flexDirection: 'column', alignItems: 'center', gap: '5px', overflow: 'auto'}}>
+        <Box sx={{ p: '0px', m:0, width: '80%', height: '60%', backgroundColor: '#008DA9', display: 'flex', justifyContent: 'center', alignItems: 'start'}}>
+          <Stack sx={{ p: '20px', m:0, width: '30%', height: '90%', backgroundColor: 'white', display: 'flex', justifyContent: 'space-around', flexDirection: 'column', alignItems: 'center', overflow: 'auto', borderRadius: '20px'}}>
 
-            <TextField size='small' id="nomeAluno" label="Nome Completo" variant="outlined" sx={{ width: '40%'}}/>
-            <TextField size='small' id="matriculaAluno" label="Número de Matrícula " variant="outlined" sx={{ width: '40%'}}/>
-            <TextField size='small' id="StatusAluno" label="Status do Aluno" variant="outlined" sx={{ width: '40%'}}/>
-            <TextField size='small' id="Nota1" label="Nota 1" variant="outlined" sx={{ width: '40%'}}/>
-            <TextField size='small' id="Nota2" label="Nota 2" variant="outlined" sx={{ width: '40%'}}/>
-            <TextField size='small' id="Nota3" label="Nota 3" variant="outlined" sx={{ width: '40%'}}/>
-            <TextField size='small' id="Nota4" label="Nota 4" variant="outlined" sx={{ width: '40%'}}/>
+            <TextField onChange={handleChange} value={aluno.nome} size='small' id="nome" label="Nome Completo" variant="outlined" sx={{ width: '350px'}}/>
+            <TextField onChange={handleChange} value={aluno.matricula} size='small' id="matricula" label="Número de Matrícula " variant="outlined" sx={{ width: '350px'}}/>
+            <TextField onChange={handleChange} value={aluno.status} size='small' id="status" label="Status do Aluno" variant="outlined" sx={{ width: '350px'}}/>
+            <TextField onChange={handleChange} value={aluno.nota1} size='small' id="nota1" label="Nota 1" variant="outlined" sx={{ width: '350px'}}/>
+            <TextField onChange={handleChange} value={aluno.nota2} size='small' id="nota2" label="Nota 2" variant="outlined" sx={{ width: '350px'}}/>
+            <TextField onChange={handleChange} value={aluno.nota3} size='small' id="nota3" label="Nota 3" variant="outlined" sx={{ width: '350px'}}/>
+            <TextField onChange={handleChange} value={aluno.nota4} size='small' id="nota4" label="Nota 4" variant="outlined" sx={{ width: '350px'}}/>
 
           </Stack>
 
         </Box>
 
-        <Box sx={{ p: '0px', m: '0px', width: '80%', height: '20%', backgroundColor: 'aquamarine', display: 'flex', justifyContent: 'center', alignItems: 'center'}}>
+        <Box sx={{ p: '0px', m: '0px', width: '80%', height: '20%', backgroundColor: '#008DA9', display: 'flex', justifyContent: 'center', alignItems: 'center'}}>
 
-          <Stack sx={{p: '15px', m:0, width: '80%', height: '60%', backgroundColor: 'yellow', display: 'flex', justifyContent: 'center', flexDirection: 'row', alignItems: 'center', gap: '15px'}}>
+          <Stack sx={{p: '15px', m:0, width: '80%', height: '60%', backgroundColor: '#008DA9', display: 'flex', justifyContent: 'center', flexDirection: 'row', alignItems: 'start', gap: '15px'}}>
 
-            <Button sx={{backgroundColor: 'white'}}>Salvar dados</Button>
-            <Button sx={{backgroundColor: 'white'}}>Limpar dados</Button>
+            <Button sx={{backgroundColor: 'white', color: 'green', fontSize: '20px', '&:hover': {backgroundColor: '#f5f5f5'}}} onClick={salvarDados}>Salvar dados</Button>
+            <Button sx={{backgroundColor: 'white', color: 'red', fontSize: '20px'}} onClick={limparDados}>Limpar dados</Button>
 
           </Stack>
         </Box>
